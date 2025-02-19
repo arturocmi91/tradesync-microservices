@@ -1,0 +1,17 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: msvc-catalog
+  data:
+    mongodb:
+      uri: mongodb+srv://arturocmi91:0QS6lNBcop8y6GaI@catalogcluster.npk9b.mongodb.net/?retryWrites=true&w=majority&appName=CatalogCluster
+      database: catalog
+  config:
+    import: optional:configserver:http://localhost:8888
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
