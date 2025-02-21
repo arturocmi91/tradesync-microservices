@@ -8,17 +8,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="microservice-gateway" />
+        <module name="microservice-catalog" />
         <module name="microservice-eureka" />
         <module name="microservice-config" />
-      </profile>
-      <profile name="Annotation profile for SpringMicroservices" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
-        </processorPath>
-        <module name="microservice-catalog" />
       </profile>
     </annotationProcessing>
   </component>
