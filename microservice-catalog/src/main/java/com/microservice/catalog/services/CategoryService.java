@@ -50,15 +50,24 @@ public class CategoryService {
 
     public Category update(String id, CategoryDto dto)  {
 
+        String formatName =formatString(dto.getName());
+
+        // Verificar si ya existe una categoría con el mismo `normalizedName`
+        Optional<Category> existingCategory = categoryRepository.findByName(formatName);
+        if (existingCategory.isPresent()) {
+            throw new IllegalArgumentException("Ya existe una categoría con ese nombre. Colocar otro!. ");
+        }
 
         Category category = categoryRepository.findById(id).get();
 
-        category.setName(dto.getName());
-        category.setArea(dto.getArea());
+        category.setName(formatName); // Guarda con el formato original
+        category.setArea(formatString(dto.getArea()));
 
 
         return categoryRepository.save(category);
     }
+
+
 
     public Category delete(String id) {
         Category category = categoryRepository.findById(id).get();
