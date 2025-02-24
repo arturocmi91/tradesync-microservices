@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CategoryService {
@@ -25,36 +22,76 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    public Category getCategory(String id) {
+    public Category getCategory(String id) throws IllegalAccessException {
         return categoryRepository.findById(id).orElseThrow(() -> new IllegalAccessException("La categoría no existe"));
     }
 
     public Category save(CategoryDto dto) throws IllegalAccessException {
+// Normalizar el nombre en minúsculas
+
+        String formatName =formatName(dto.getName());
 
 
 
-        Category category = new Category(dto.getId(), dto.getName(), dto.getArea(),null);
+        // Verificar si ya existe una categoría con el mismo `normalizedName`
+        Optional<Category> existingCategory = categoryRepository.findByName(formatName);
+        if (existingCategory.isPresent()) {
+            throw new IllegalArgumentException("Ya existe una categoría con ese nombre.");
+        }
+
+
+        String id= generateCatalogId(dto.getName(), dto.getArea());
+
+        Category category = new Category();
+       category.setId(id);
+        category.setName(formatName); // Guarda con el formato original
+        category.setArea(dto.getArea());
+       category.setProducts(Collections.emptyList());
+
+                ;
         return categoryRepository.save(category);
     }
 
-    public Product update(String id, ProductDto dto) throws IllegalAccessException {
+    public Category update(String id, CategoryDto dto)  {
 
-        Optional<Category> category = categoryRepository.findById(dto.getCategoryId());
-        if (category.isEmpty()) {
-            throw new IllegalAccessException("La categoría con ID " + dto.getCategoryId() + " no existe.");
+
+        Category category = categoryRepository.findById(id).get();
+
+        category.setName(dto.getName());
+        category.setArea(dto.getArea());
+
+
+        return categoryRepository.save(category);
+    }
+
+    public Category delete(String id) {
+        Category category = categoryRepository.findById(id).get();
+        categoryRepository.delete(category);
+        return category;
+    }
+//METODOS PRIVATE
+    // Método para generar un catalogId único
+    private String generateCatalogId(String name, String area) {
+        String firstLetterName = name.substring(0, 1).toUpperCase();
+        String firstLetterArea = area.substring(0, 1).toUpperCase();
+
+        // Buscar el último catalogId generado y obtener el número secuencial
+        Optional<Category> lastCategory = categoryRepository.findTopByOrderByIdDesc();
+        int nextSequential = lastCategory.map(category -> {
+            String lastId = category.getId();
+            int lastNumber = Integer.parseInt(lastId.substring(3)); // Extrae el número
+            return lastNumber + 1;
+        }).orElse(1); // Si no hay categorías, comienza desde 1
+
+        return "C" + firstLetterName + firstLetterArea + String.format("%03d", nextSequential);
+    }
+    // Método para formatear el nombre con la primera letra en mayúscula
+    private String formatName(String name) {
+        if (name == null || name.isEmpty()) {
+            return "";
         }
-
-        Product product = productRepository.findById(id).get();
-        product.setName(dto.getName());
-        product.setPrice(dto.getPrice());
-        product.setCategory(category.get());
-
-        return productRepository.save(product);
+        name = name.trim().toLowerCase(); // Convertir todo a minúscula primero
+        return Character.toUpperCase(name.charAt(0)) + name.substring(1);
     }
 
-    public Product delete(String id) {
-        Product product = productRepository.findById(id).get();
-        productRepository.delete(product);
-        return product;
-    }
 }

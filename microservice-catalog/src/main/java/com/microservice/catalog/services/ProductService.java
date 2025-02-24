@@ -45,18 +45,30 @@ public class ProductService {
 
     public Product update(String id, ProductDto dto) throws IllegalAccessException {
 
-        Optional<Category> category = categoryRepository.findById(dto.getCategoryId());
-        if (category.isEmpty()) {
+        Optional<Category> categoryOptional = categoryRepository.findById(dto.getCategoryId());
+        if (categoryOptional.isEmpty()) {
             throw new IllegalAccessException("La categoría con ID " + dto.getCategoryId() + " no existe.");
         }
+        Category category = categoryOptional.get();
 
-        Product product = productRepository.findById(id).get();
+        Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
-        product.setCategory(category.get());
+        product.setCategory(category);
 
-        return productRepository.save(product);
+        productRepository.save(product);
+
+        //  **Actualizar la lista de productos en la categoría**
+        List<Product> updatedProducts = productRepository.findByCategory(category);
+        category.setProducts(updatedProducts); // Asegura que tenga la lista correcta
+        categoryRepository.save(category); // Guarda la categoría con la lista actualizada
+
+        return product;
     }
+
+
+
+
 
     public Product delete(String id) {
         Product product = productRepository.findById(id).get();
@@ -64,7 +76,7 @@ public class ProductService {
         return product;
     }
 
-
+    //private methods
 
 
 }
