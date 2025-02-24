@@ -29,23 +29,19 @@ public class CategoryService {
     public Category save(CategoryDto dto) throws IllegalAccessException {
 // Normalizar el nombre en minúsculas
 
-        String formatName =formatName(dto.getName());
-
-
+        String formatName =formatString(dto.getName());
 
         // Verificar si ya existe una categoría con el mismo `normalizedName`
         Optional<Category> existingCategory = categoryRepository.findByName(formatName);
         if (existingCategory.isPresent()) {
             throw new IllegalArgumentException("Ya existe una categoría con ese nombre.");
         }
-
-
         String id= generateCatalogId(dto.getName(), dto.getArea());
 
         Category category = new Category();
        category.setId(id);
         category.setName(formatName); // Guarda con el formato original
-        category.setArea(dto.getArea());
+        category.setArea(formatString(dto.getArea()));
        category.setProducts(Collections.emptyList());
 
                 ;
@@ -69,6 +65,10 @@ public class CategoryService {
         categoryRepository.delete(category);
         return category;
     }
+    public void deleteAll(){
+        List<Category> categories= categoryRepository.findAll();
+        categoryRepository.deleteAll(categories);
+    }
 //METODOS PRIVATE
     // Método para generar un catalogId único
     private String generateCatalogId(String name, String area) {
@@ -86,12 +86,12 @@ public class CategoryService {
         return "C" + firstLetterName + firstLetterArea + String.format("%03d", nextSequential);
     }
     // Método para formatear el nombre con la primera letra en mayúscula
-    private String formatName(String name) {
-        if (name == null || name.isEmpty()) {
+    private String formatString(String String) {
+        if (String == null || String.isEmpty()) {
             return "";
         }
-        name = name.trim().toLowerCase(); // Convertir todo a minúscula primero
-        return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+        String = String.trim().toLowerCase(); // Convertir todo a minúscula primero
+        return Character.toUpperCase(String.charAt(0)) + String.substring(1);
     }
 
 }
