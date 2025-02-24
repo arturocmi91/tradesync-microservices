@@ -28,7 +28,7 @@ public class Category {
 
     @Indexed(unique = true) // Evita duplicados en MongoDB
     private String name;
-    @Indexed(unique = true)
+
     private String area;
 
     private List<Product> products;

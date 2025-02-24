@@ -25,9 +25,12 @@ public class Product {
     @Id
 
     private  String id;
+
+    @Indexed(unique = true)
     private String name;
     private double price;
     @JsonIgnoreProperties({ "area", "products"})
+    @DBRef
     private Category category;
 
 

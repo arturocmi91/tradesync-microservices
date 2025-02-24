@@ -18,6 +18,7 @@ public class CategoryService {
     @Autowired
     CategoryRepository categoryRepository;
 
+
     public List<Category> getAll() {
         return categoryRepository.findAll();
     }
@@ -29,44 +30,61 @@ public class CategoryService {
     public Category save(CategoryDto dto) throws IllegalAccessException {
 // Normalizar el nombre en minúsculas
 
-        String formatName =formatString(dto.getName());
+        String formatName =formatCategory(dto.getName());
 
-        // Verificar si ya existe una categoría con el mismo `normalizedName`
+        // Verificar si ya existe una categoría con el mismo `formatName`
         Optional<Category> existingCategory = categoryRepository.findByName(formatName);
         if (existingCategory.isPresent()) {
             throw new IllegalArgumentException("Ya existe una categoría con ese nombre.");
         }
         String id= generateCatalogId(dto.getName(), dto.getArea());
 
+        String CurrentName= formatCategory(dto.getName());
+
         Category category = new Category();
        category.setId(id);
         category.setName(formatName); // Guarda con el formato original
-        category.setArea(formatString(dto.getArea()));
+        category.setArea(formatCategory(dto.getArea()));
        category.setProducts(Collections.emptyList());
 
-                ;
+
         return categoryRepository.save(category);
     }
 
     public Category update(String id, CategoryDto dto)  {
 
-        String formatName =formatString(dto.getName());
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(" Categoría no encontrada."));
 
-        // Verificar si ya existe una categoría con el mismo `normalizedName`
-        Optional<Category> existingCategory = categoryRepository.findByName(formatName);
-        if (existingCategory.isPresent()) {
+        String currentName =category.getName();
+
+        String updatedName =formatCategory(dto.getName());
+
+
+
+        if (!currentName.equalsIgnoreCase(updatedName) ){
+            Optional<Category> existingNameCategory = categoryRepository.findByName(updatedName);
+
+
+            if (existingNameCategory.isPresent() ) {
             throw new IllegalArgumentException("Ya existe una categoría con ese nombre. Colocar otro!. ");
+            }
+
+            String newId =  generateCatalogId(dto.getName(), dto.getArea());
+
+            category.setId(newId);
+            category.setName(updatedName);
+
+            categoryRepository.deleteById(id);
+
         }
 
-        Category category = categoryRepository.findById(id).get();
-
-        category.setName(formatName); // Guarda con el formato original
-        category.setArea(formatString(dto.getArea()));
+        category.setName(updatedName); // Guarda con el formato original
+        category.setArea(formatCategory(dto.getArea()));
 
 
         return categoryRepository.save(category);
     }
-
 
 
     public Category delete(String id) {
@@ -76,6 +94,7 @@ public class CategoryService {
     }
     public void deleteAll(){
         List<Category> categories= categoryRepository.findAll();
+
         categoryRepository.deleteAll(categories);
     }
 //METODOS PRIVATE
@@ -95,7 +114,7 @@ public class CategoryService {
         return "C" + firstLetterName + firstLetterArea + String.format("%03d", nextSequential);
     }
     // Método para formatear el nombre con la primera letra en mayúscula
-    private String formatString(String String) {
+    private String formatCategory(String String) {
         if (String == null || String.isEmpty()) {
             return "";
         }

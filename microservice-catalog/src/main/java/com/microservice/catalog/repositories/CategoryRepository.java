@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface CategoryRepository extends MongoRepository<Category,String> {
     Optional<Category> findTopByOrderByIdDesc();
     Optional<Category> findByName(String name);
+
+
 }

@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @Builder
-@CompoundIndex(def = "{'name': 1, 'area': 1}", unique = true)
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryDto {
