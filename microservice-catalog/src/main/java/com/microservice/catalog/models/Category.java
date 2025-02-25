@@ -31,6 +31,8 @@ public class Category {
 
     private String area;
 
+    @JsonIgnoreProperties("category")
+
     private List<Product> products;
 
 

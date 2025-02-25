@@ -1,6 +1,7 @@
 package com.microservice.catalog.services;
 
 import com.microservice.catalog.dtos.ProductDto;
+import com.microservice.catalog.global.exceptions.ResourceNotFoundException;
 import com.microservice.catalog.models.Category;
 import com.microservice.catalog.models.Product;
 import com.microservice.catalog.repositories.CategoryRepository;
@@ -25,15 +26,15 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getProduct(String id) {
-        return productRepository.findById(id).orElseThrow();
+    public Product getProduct(String id) throws ResourceNotFoundException {
+        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("This product " + id + " not found."));
     }
 
-    public Product save(ProductDto dto) throws IllegalAccessException {
+    public Product save(ProductDto dto) throws  ResourceNotFoundException {
 
         Optional<Category> categoryOptional = categoryRepository.findById(dto.getCategoryId());
         if (categoryOptional.isEmpty()) {
-            throw new IllegalAccessException("La categoría con ID " + dto.getCategoryId() + " no existe.");
+            throw new ResourceNotFoundException("This category " + dto.getCategoryId() + " not found.");
         }
 
         Category category= categoryOptional.get();
@@ -46,16 +47,16 @@ public class ProductService {
         return product;
     }
 
-    public Product update(String id, ProductDto dto) throws IllegalAccessException {
+    public Product update(String id, ProductDto dto) throws ResourceNotFoundException {
 
 
         Optional<Category> categoryOptional = categoryRepository.findById(dto.getCategoryId());
         if (categoryOptional.isEmpty()) {
-            throw new IllegalAccessException("La categoría con ID " + dto.getCategoryId() + " no existe.");
+            throw new ResourceNotFoundException("This category  " + dto.getCategoryId() + " not found.");
         }
         Category newCategory = categoryOptional.get();
 
-        Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         Category currentCategory= product.getCategory();
 
@@ -76,8 +77,8 @@ public class ProductService {
     }
 
 
-    public Product delete(String id) {
-        Product product = productRepository.findById(id).get();
+    public Product delete(String id) throws ResourceNotFoundException {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("not found"));
         productRepository.delete(product);
         return product;
     }

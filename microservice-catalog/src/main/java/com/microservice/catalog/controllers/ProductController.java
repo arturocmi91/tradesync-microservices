@@ -1,6 +1,7 @@
 package com.microservice.catalog.controllers;
 
 import com.microservice.catalog.dtos.ProductDto;
+import com.microservice.catalog.global.exceptions.ResourceNotFoundException;
 import com.microservice.catalog.models.Product;
 import com.microservice.catalog.services.ProductService;
 import jakarta.ws.rs.DELETE;
@@ -19,7 +20,7 @@ public class ProductController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Product save(@RequestBody ProductDto dto) throws IllegalAccessException {
+    public Product save(@RequestBody ProductDto dto) throws ResourceNotFoundException {
         return productService.save(dto);
     }
 
@@ -31,17 +32,17 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Product getProduct(@PathVariable String id) {
+    public Product getProduct(@PathVariable String id) throws ResourceNotFoundException {
         return productService.getProduct(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable String id, @RequestBody ProductDto dto) throws IllegalAccessException {
+    public ResponseEntity<Product> update(@PathVariable String id, @RequestBody ProductDto dto) throws  ResourceNotFoundException {
         return ResponseEntity.ok(productService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Product> delete(@PathVariable String id) {
+    public ResponseEntity<Product> delete(@PathVariable String id) throws ResourceNotFoundException {
         return ResponseEntity.ok(productService.delete(id));
     }
 
