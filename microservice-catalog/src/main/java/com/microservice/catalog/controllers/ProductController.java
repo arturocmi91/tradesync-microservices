@@ -1,6 +1,7 @@
 package com.microservice.catalog.controllers;
 
 import com.microservice.catalog.dtos.ProductDto;
+import com.microservice.catalog.global.exceptions.AttributeException;
 import com.microservice.catalog.global.exceptions.ResourceNotFoundException;
 import com.microservice.catalog.models.Product;
 import com.microservice.catalog.services.ProductService;
@@ -20,7 +21,7 @@ public class ProductController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Product save(@RequestBody ProductDto dto) throws ResourceNotFoundException {
+    public Product save(@RequestBody ProductDto dto) throws ResourceNotFoundException, AttributeException {
         return productService.save(dto);
     }
 
@@ -37,7 +38,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(@PathVariable String id, @RequestBody ProductDto dto) throws  ResourceNotFoundException {
+    public ResponseEntity<Product> update(@PathVariable String id, @RequestBody ProductDto dto) throws ResourceNotFoundException, AttributeException {
         return ResponseEntity.ok(productService.update(id, dto));
     }
 

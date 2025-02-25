@@ -1,6 +1,7 @@
 package com.microservice.catalog.services;
 
 import com.microservice.catalog.dtos.ProductDto;
+import com.microservice.catalog.global.exceptions.AttributeException;
 import com.microservice.catalog.global.exceptions.ResourceNotFoundException;
 import com.microservice.catalog.models.Category;
 import com.microservice.catalog.models.Product;
@@ -9,10 +10,7 @@ import com.microservice.catalog.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 
@@ -30,11 +28,14 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("This product " + id + " not found."));
     }
 
-    public Product save(ProductDto dto) throws  ResourceNotFoundException {
+    public Product save(ProductDto dto) throws ResourceNotFoundException, AttributeException {
 
         Optional<Category> categoryOptional = categoryRepository.findById(dto.getCategoryId());
         if (categoryOptional.isEmpty()) {
             throw new ResourceNotFoundException("This category " + dto.getCategoryId() + " not found.");
+        }
+        if (productRepository.existsByName(dto.getName())){
+            throw  new AttributeException(" This name "+dto.getName()+" already exist ");
         }
 
         Category category= categoryOptional.get();
@@ -47,21 +48,26 @@ public class ProductService {
         return product;
     }
 
-    public Product update(String id, ProductDto dto) throws ResourceNotFoundException {
+    public Product update(String id, ProductDto dto) throws ResourceNotFoundException, AttributeException {
 
 
-        Optional<Category> categoryOptional = categoryRepository.findById(dto.getCategoryId());
-        if (categoryOptional.isEmpty()) {
-            throw new ResourceNotFoundException("This category  " + dto.getCategoryId() + " not found.");
-        }
-        Category newCategory = categoryOptional.get();
+
 
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
+        if (productRepository.existsByName(dto.getName()) && !productRepository.findByName(dto.getName()).get().getId().equals(id)){
+            throw  new AttributeException(" The name : " + dto.getName() + " already exist in another register ");
+        }
+
+
         Category currentCategory= product.getCategory();
 
+        Category newCategory = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("This category " + dto.getCategoryId() + " not found."));
 
-        if (currentCategory != null && !currentCategory.getId().equals(newCategory.getId()));{
+
+
+        if (currentCategory != null && !currentCategory.getId().equals(newCategory.getId())){
             currentCategory.getProducts().removeIf(p -> p.getId().equals(product.getId()));
             categoryRepository.save(currentCategory);
         }
