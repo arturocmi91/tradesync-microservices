@@ -9,6 +9,10 @@ spring:
       database: catalog
   config:
     import: optional:configserver:http://localhost:8888
+    logging:
+      level:
+        org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+        com.mongodb.driver.cluster: DEBUG
 eureka:
   instance:
     hostname: localhost
