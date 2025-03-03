@@ -2,6 +2,8 @@ package com.microservice.catalog.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,8 +28,10 @@ public class Product {
 
     private  String id;
 
+
     @Indexed(unique = true)
     private String name;
+
     private double price;
     @JsonIgnoreProperties({ "area", "products"})
     @DBRef

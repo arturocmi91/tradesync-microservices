@@ -30,15 +30,13 @@ public class ProductService {
 
     public Product save(ProductDto dto) throws ResourceNotFoundException, AttributeException {
 
-        Optional<Category> categoryOptional = categoryRepository.findById(dto.getCategoryId());
-        if (categoryOptional.isEmpty()) {
-            throw new ResourceNotFoundException("This category " + dto.getCategoryId() + " not found.");
-        }
+        Category category  = categoryRepository.findById(dto.getCategory()).orElseThrow(() -> new ResourceNotFoundException("This category " + dto.getCategory() + " not found."));
+
         if (productRepository.existsByName(dto.getName())){
             throw  new AttributeException(" This name "+dto.getName()+" already exist ");
         }
 
-        Category category= categoryOptional.get();
+
 
         String id = UUID.randomUUID().toString(); // Generar UUID
 
@@ -62,8 +60,8 @@ public class ProductService {
 
         Category currentCategory= product.getCategory();
 
-        Category newCategory = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("This category " + dto.getCategoryId() + " not found."));
+        Category newCategory = categoryRepository.findById(dto.getCategory())
+                .orElseThrow(() -> new ResourceNotFoundException("This category " + dto.getCategory() + " not found."));
 
 
 

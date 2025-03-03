@@ -1,4 +1,4 @@
-package com.microservice.catalog.controllers;
+package com.microservice.catalog.services.controllers;
 
 import com.microservice.catalog.dtos.CategoryDto;
 import com.microservice.catalog.dtos.ProductDto;
