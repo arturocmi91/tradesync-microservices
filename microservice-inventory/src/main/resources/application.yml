@@ -9,7 +9,11 @@ spring:
     username: ${USERNAME}
     password: ${PASSWORD}
 
+  logging:
+      level:
+        org.hibernate.SQL: DEBUG
   jpa:
+      show-sql: true
       hibernate:
         ddl-auto: create
       database: mysql

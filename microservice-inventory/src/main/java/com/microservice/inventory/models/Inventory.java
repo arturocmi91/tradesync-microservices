@@ -1,36 +1,42 @@
 package com.microservice.inventory.models;
 
 import com.microservice.inventory.enums.ItemStatus;
+
+import com.microservice.inventory.models.locations.Location;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import lombok.*;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "inventory")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(exclude = {"item"})
+@ToString(exclude = {"item"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Inventory {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String sku;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id", nullable = false, referencedColumnName = "sku")
+    @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bin_location_id", nullable = false)
-    private BinLocation binLocation;
+    @ManyToMany
+    @JoinTable(name = "inventory_location_table",
+            joinColumns = @JoinColumn(name = "sku"),
+            inverseJoinColumns = @JoinColumn(name = "location_id")
+    )
+    private Set<Location> locations;
 
-    @Column(nullable = false)
     private int quantity;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+
     private ItemStatus status;
 }
