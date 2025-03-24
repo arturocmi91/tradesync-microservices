@@ -21,7 +21,9 @@ public class ItemDto {
     private String name;
     @NotBlank(message = "The brand is mandatory")
     private String brand;
-    @NotBlank(message = "The brand is mandatory")
+    @NotBlank(message = "The Supplier is mandatory")
+    private String supplier;
+
     private String description;
 
 }

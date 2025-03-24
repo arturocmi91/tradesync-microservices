@@ -29,5 +29,9 @@ public class Item {
 
     private String description;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_id",nullable = false)
+    private Supplier supplier;
+
 
 }

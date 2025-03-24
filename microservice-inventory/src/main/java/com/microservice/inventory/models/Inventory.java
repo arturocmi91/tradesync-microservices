@@ -23,7 +23,7 @@ public class Inventory {
     @Id
     private String sku;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 

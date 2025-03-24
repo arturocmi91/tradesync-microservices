@@ -18,9 +18,13 @@ INSERT INTO container (id, drop_zone) VALUES ('LC004', 'DROP-1');
 INSERT INTO container (id, drop_zone) VALUES ('LC005', 'DROP-2');
 INSERT INTO container (id, drop_zone) VALUES ('LC006', 'DROP-3');
 
+-- Insertar registros en la tabla Supplier
+INSERT  INTO supplier(name, supplier_type) VALUES ('Distribuidora Medellin', 'INTERNAL_STORAGE');
+INSERT  INTO supplier(name, supplier_type) VALUES ('Mayorista 2', 'EXTERNAL_STORAGE');
+
 -- Insertar registros en la tabla Item
-INSERT INTO item (barcode, name, brand, description) VALUES ('1234567890123', 'Martillo', 'Stanley', 'Martillo de acero con mango de goma');
-INSERT INTO item (barcode, name, brand, description) VALUES ('5463212547885', 'Martillo', 'Botch', 'Martillo de acero con mango de goma');
+INSERT INTO item (barcode, name, brand, description, supplier_id) VALUES ('1234567890123', 'Martillo', 'Stanley', 'Martillo de acero con mango de goma', 1);
+INSERT INTO item (barcode, name, brand, description, supplier_id) VALUES ('5463212547885', 'Martillo', 'Botch', 'Martillo de acero con mango de goma', 2);
 
 -- Insertar datos en la relación many-to-many, primero necesitamos inventarios
 INSERT INTO inventory (sku, item_id, quantity, status) VALUES ('ST001', 1 , 100, 'SELLABLE');
