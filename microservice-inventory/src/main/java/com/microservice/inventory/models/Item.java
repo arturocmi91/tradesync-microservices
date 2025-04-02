@@ -1,6 +1,8 @@
 package com.microservice.inventory.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +31,10 @@ public class Item {
 
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("items")
+    //@JsonIgnoreProperties({ "items", "hibernateLazyInitializer", "handler" })
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "supplier_id",nullable = false)
     private Supplier supplier;
 

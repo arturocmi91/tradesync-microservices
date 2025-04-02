@@ -1,6 +1,8 @@
 package com.microservice.inventory.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.microservice.inventory.enums.SupplierType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,6 +27,8 @@ public class Supplier {
     @Enumerated(EnumType.STRING)
     private SupplierType supplierType;
 
+
+    //@JsonManagedReference
     @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Item> items;
 

@@ -39,4 +39,6 @@ public class Inventory {
     @Enumerated(EnumType.STRING)
 
     private ItemStatus status;
+
+
 }

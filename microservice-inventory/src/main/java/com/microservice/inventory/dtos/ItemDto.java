@@ -22,7 +22,7 @@ public class ItemDto {
     @NotBlank(message = "The brand is mandatory")
     private String brand;
     @NotBlank(message = "The Supplier is mandatory")
-    private String supplier;
+    private Long supplier;
 
     private String description;
 
