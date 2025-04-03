@@ -42,16 +42,13 @@ public class ItemService {
 
 
         } else if (supplier.getSupplierType() == SupplierType.EXTERNAL_STORAGE) {
-            if (itemRepository.existsByBarcodeAndSupplier_Id(dto.getBarcode(), dto.getSupplier())) {
+            if (itemRepository.existsByBarcodeAndNameAndBrandAndSupplier_Id(dto.getBarcode(), dto.getName(), dto.getBrand(), dto.getSupplier())) {
                 throw new IllegalArgumentException("Barcode " + dto.getBarcode() + " already exists for this external supplier.");
             }
 
 
 
         }
-
-
-
 
 
 
