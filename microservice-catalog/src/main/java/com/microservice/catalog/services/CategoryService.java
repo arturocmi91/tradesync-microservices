@@ -142,7 +142,7 @@ public class CategoryService {
         if (String == null || String.isEmpty()) {
             return "";
         }
-        String = String.trim().toLowerCase(); // Convertir todo a minúscula primero
+        String = String.trim().toLowerCase();
         return Character.toUpperCase(String.charAt(0)) + String.substring(1);
     }
 

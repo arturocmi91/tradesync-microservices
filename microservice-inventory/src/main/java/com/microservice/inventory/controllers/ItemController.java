@@ -19,7 +19,7 @@ public class ItemController {
     ItemService itemService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> save(@RequestBody ItemDto dto) throws IllegalAccessException {
+    public ResponseEntity<?> saveItem(@RequestBody ItemDto dto) throws IllegalAccessException {
 
         try {
             Item savedItem = itemService.save(dto);
@@ -44,12 +44,38 @@ public class ItemController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Item getProduct(@PathVariable Long id) throws IllegalArgumentException {
+    public Item getItem(@PathVariable Long id) throws IllegalArgumentException {
         return itemService.getItem(id);
     }
-/*
-    @PutMapping("/{id}")
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateItem(@PathVariable Long id,@RequestBody ItemDto dto) throws IllegalAccessException {
+
+        try {
+            Item updatedItem = itemService.update(id,dto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(updatedItem);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
+    }
+    @DeleteMapping("/{id}")
+
+    public ResponseEntity<?> delete(@PathVariable Long id ){
+        try {
+            Item deleteItem = itemService.delete(id);
+            return ResponseEntity.status(HttpStatus.OK).body(deleteItem);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/delete")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAll() {
+        itemService.deleteAll();
+    }
+/*
    public ResponseEntity<MessageDto> update(@PathVariable String id, @Validated @RequestBody ProductDto dto) throws ResourceNotFoundException, AttributeException {
         Product product = productService.update(id, dto);
         String message = "The product: " + " ' " + product.getId() + " ' " + " have been updated";

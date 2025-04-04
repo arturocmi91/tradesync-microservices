@@ -11,13 +11,9 @@ import java.util.Optional;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    Optional<Item> findByName(String name);
-
-    boolean existsByName(String name);
-
-    Optional<Item> findByBarcode(String barcode);
 
 
+    boolean existsByBarcode(String barcode);
     // Verifica si ya existe un código de barras en cualquier proveedor interno
     boolean existsByBarcodeAndSupplier_SupplierType(String barcode, SupplierType supplierType);
 
@@ -25,4 +21,15 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     boolean existsByBarcodeAndNameAndBrandAndSupplier_Id(String barcode, String name, String brand, Long supplierId);
 
 
+    boolean existsByBarcodeAndSupplier_SupplierTypeAndIdNot(String barcode, SupplierType supplierType, Long id);
+
+    boolean existsByBarcodeAndSupplier_IdAndIdNot(String barcode, Long supplierId, Long id) ;
+
+
+
+
+
+    Optional<Item> findByBarcodeAndSupplierId(String barcode, Long supplier);
+
+    boolean existsByBarcodeAndSupplier_Id(String barcode, Long supplier);
 }
