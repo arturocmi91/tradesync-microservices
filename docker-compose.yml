@@ -10,7 +10,7 @@ services:
       - "8761:8761"
     networks:
       - microservices-net
-    restart: always
+    #restart: always
 
 networks:
   microservices-net:
