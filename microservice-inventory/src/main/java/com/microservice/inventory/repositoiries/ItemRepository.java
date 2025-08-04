@@ -13,12 +13,12 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
 
 
-    boolean existsByBarcode(String barcode);
+    //boolean existsByBarcode(String barcode);
     // Verifica si ya existe un código de barras en cualquier proveedor interno
     boolean existsByBarcodeAndSupplier_SupplierType(String barcode, SupplierType supplierType);
 
     // Verifica si ya existe un código de barras, nombre y marca en el mismo proveedor externo
-    boolean existsByBarcodeAndNameAndBrandAndSupplier_Id(String barcode, String name, String brand, Long supplierId);
+   // boolean existsByBarcodeAndNameAndBrandAndSupplier_Id(String barcode, String name, String brand, Long supplierId);
 
 
     boolean existsByBarcodeAndSupplier_SupplierTypeAndIdNot(String barcode, SupplierType supplierType, Long id);

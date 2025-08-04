@@ -33,7 +33,7 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
-    public Item save(ItemDto dto) {// TODO :REVISAR PROBLEMA DE CREACION DE BARCODE REPETIDA EN EL TIPO DE SUPPLIER  (TIENE QUE SER UNICA)
+    public Item save(ItemDto dto) {
 
         Supplier supplier = supplierRepository.findById(dto.getSupplier()).orElseThrow(()
                 -> new IllegalArgumentException("This Supplier " + dto.getSupplier() + " not found."));
